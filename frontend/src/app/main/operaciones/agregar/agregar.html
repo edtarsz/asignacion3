@@ -1,0 +1,35 @@
+<form [formGroup]="myForm" class="w-full flex flex-col gap-5" (ngSubmit)="onSubmit()">
+    <div class="w-full flex flex-col gap-2">
+        @if (interfaceService.entidad$() === 'Estudiante') {
+        <label for="">Nombres</label>
+        <input type="text" placeholder="Primer nombre"
+            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none"
+            formControlName="nombreEstudiante">
+        <label for="">Apellidos</label>
+        <input type="text" placeholder="Primer nombre"
+            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none"
+            formControlName="apellidosEstudiante">
+        <label for="">Carrera</label>
+        <select
+            class="w-full bg-[var(--input-background-color)] py-4 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none text-white appearance-none">
+            <option value="" class="bg-[var(--card-background-color)] text-white">Selecciona una carrera
+                (opcional)
+            </option>
+            @for (carrera of carreraService.carreras$(); track $index) {
+            <option value="{{ carrera.nombre }}" class="bg-[var(--card-background-color)] text-white">
+                {{ carrera.nombre }}
+            </option>
+            }
+        </select>
+        } @else if (interfaceService.entidad$() === 'Carrera') {
+        <label for="">Nombre de la carrera</label>
+        <input type="text" placeholder="Introducir nombre de la carrera"
+            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none"
+            formControlName="nombreCarrera">
+        }
+    </div>
+    <button type="submit"
+        class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out font-bold">
+        Agregar
+    </button>
+</form>

@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+* {
+    box-sizing: border-box;
+    /* margin: 0;
+    padding: 0; */
+}
+
+:root {
+    /* Fonts */
+    --ubuntu-bold: 'UbuntuBold';
+    --ubuntu-regular: 'UbuntuRegular';
+
+    /* Colors */
+    --primary-color: #141B41;
+    --primary-color-hover: #293175;
+
+    --secondary-color: #626581;
+    --tertiary-color: #D28600;
+
+    --card-background-color: #272B52;
+    --small-card-background-color: #4C4D74;
+}
+
+body {
+    font-family: var(--ubuntu-regular);
+}
+
+@font-face {
+    font-family: 'UbuntuBold';
+    src: url('assets/fonts/Ubuntu-Bold.woff2') format('woff2');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'UbuntuRegular';
+    src: url('assets/fonts/Ubuntu-Regular.woff2') format('woff2');
+    font-weight: normal;
+}

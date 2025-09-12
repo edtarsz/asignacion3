@@ -1,0 +1,32 @@
+<div class="w-full flex flex-col gap-2">
+    @if (interfaceService.entidad$() === 'Estudiante') {
+    @for (alumno of alumnoService.alumnos$(); track $index) {
+    <div class="w-full flex flex-col gap-2">
+        <div class="w-full flex justify-between items-center">
+            <div>
+                <p class="font-bold">{{ alumno.nombre }} {{ alumno.apellidos }}</p>
+                <p class="text-sm">Carrera: {{ alumno.carrera ? alumno.carrera.nombre : 'No asignada' }}</p>
+            </div>
+            <button type="submit"
+                class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out font-bold"
+                (click)="eliminar(alumno.id)">
+                Eliminar
+            </button>
+        </div>
+        <hr>
+    </div>
+    }
+    } @else if (interfaceService.entidad$() === 'Carrera') {
+    @for (carrera of carreraService.carreras$(); track $index) {
+    <div class="w-full flex justify-between items-center">
+        <p class="font-bold">{{ carrera.nombre }}</p>
+        <button type="submit"
+            class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out font-bold"
+            (click)="eliminar(carrera.id)">
+            Eliminar
+        </button>
+    </div>
+    <hr>
+    }
+    }
+</div>

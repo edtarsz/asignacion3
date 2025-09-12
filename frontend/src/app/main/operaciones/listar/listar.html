@@ -1,0 +1,21 @@
+<div class="w-full flex flex-col gap-5">
+    @if (interfaceService.entidad$() === 'Estudiante') {
+        @for (alumno of alumnoService.alumnos$(); track $index) {
+            <div class="w-full flex flex-col gap-2">
+                <p class="font-bold">{{ alumno.nombre }} {{ alumno.apellidos }}</p>
+                <p class="text-sm">Carrera: {{ alumno.carrera ? alumno.carrera.nombre : 'No asignada' }}</p>
+                <hr>
+            </div>
+        }
+    } @else if (interfaceService.entidad$() === 'Carrera') {
+        @for (carrera of carreraService.carreras$(); track $index) {
+            <div class="w-full flex flex-col gap-2">
+                <p class="font-bold">{{ carrera.nombre }}</p>
+                <hr>
+            </div>
+        }
+    }
+    @if (interfaceService.operacion$() === 'eliminar') {
+        <button (click)="eliminar()">Eliminar</button>
+    }
+</div>

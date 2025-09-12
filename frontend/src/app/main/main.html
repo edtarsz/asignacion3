@@ -1,0 +1,51 @@
+<main class="w-screen h-screen flex flex-col items-center px-[5vw] sm:px-[5vw] lg:px-[20vw]">
+    <header class="w-full flex items-center justify-between font-bold py-[3vh]">
+        <span><a href="" routerLink="/index">Asignación 3</a></span>
+        <ul class="flex gap-10">
+            <li>
+                <p class="hover:cursor-pointer" href="" (click)="onClickEntidad('Estudiante')">Estudiantes</p>
+            </li>
+            <li>
+                <p class="hover:cursor-pointer" href="" (click)="onClickEntidad('Carrera')">Carreras</p>
+            </li>
+        </ul>
+    </header>
+    <div class="w-full flex flex-col gap-5">
+        <div class="w-full flex h-auto flex-col gap-3 justify-center bg-[var(--card-background-color)] bg-cover px-[3vw] py-[3vw] lg:px-6 lg:py-6 text-white rounded-2xl border border-[rgba(255,255,255,0.2)]"
+            loading="eager">
+            <p class="text-center text-2xl">Operaciones</p>
+            <div class="w-full flex flex-wrap gap-3 justify-center items-center">
+                <a class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out"
+                    routerLink="agregar" (click)="onClickOperacion('Agregar')">
+                    Agregar
+                </a>
+                <a class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out"
+                    routerLink="eliminar" (click)="onClickOperacion('Eliminar')">
+                    Eliminar
+                </a>
+                <a class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out"
+                    routerLink="actualizar" (click)="onClickOperacion('Actualizar')">
+                    Actualizar
+                </a>
+                <a class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out"
+                    routerLink="asignar" (click)="onClickOperacion('Asignar')">
+                    Asignar
+                </a>
+                <a class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out"
+                    routerLink="listar" (click)="onClickOperacion('Listar')">
+                    Listar
+                </a>
+            </div>
+        </div>
+        <div class="w-full flex h-auto flex-col gap-2 justify-center bg-[var(--card-background-color)] bg-cover px-[3vw] py-[3vw] lg:px-6 lg:py-6 text-white rounded-2xl border border-[rgba(255,255,255,0.2)]"
+            loading="eager">
+            <div class="flex justify-between">
+                <p class="text-center text-2xl">{{ interfaceService.operacion$() }}</p>
+                <p class="text-center text-2xl">{{ interfaceService.entidad$() }}</p>
+            </div>
+            <hr>
+            <!-- Operaciones -->
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</main>
