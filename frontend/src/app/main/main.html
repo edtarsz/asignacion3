@@ -1,15 +1,5 @@
 <main class="w-screen h-screen flex flex-col items-center px-[5vw] sm:px-[5vw] lg:px-[20vw]">
-    <header class="w-full flex items-center justify-between font-bold py-[3vh]">
-        <span><a href="" routerLink="/index">Asignación 3</a></span>
-        <ul class="flex gap-10">
-            <li>
-                <p class="hover:cursor-pointer" href="" (click)="onClickEntidad('Estudiante')">Estudiantes</p>
-            </li>
-            <li>
-                <p class="hover:cursor-pointer" href="" (click)="onClickEntidad('Carrera')">Carreras</p>
-            </li>
-        </ul>
-    </header>
+    <app-header></app-header>
     <div class="w-full flex flex-col gap-5">
         <div class="w-full flex h-auto flex-col gap-3 justify-center bg-[var(--card-background-color)] bg-cover px-[3vw] py-[3vw] lg:px-6 lg:py-6 text-white rounded-2xl border border-[rgba(255,255,255,0.2)]"
             loading="eager">

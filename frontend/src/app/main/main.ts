@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { InterfaceService } from '../services/interface.service';
+import { Header } from "../shared/header/header";
 
 @Component({
   selector: 'app-main',
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet, RouterLink, Header],
   templateUrl: './main.html',
   styleUrl: './main.css'
 })
