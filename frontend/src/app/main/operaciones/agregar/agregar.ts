@@ -67,9 +67,6 @@ export class Agregar implements OnInit {
       new Carrera('Sin asignar')
     );
     this.alumnoService.agregarAlumno(nuevoEstudiante);
-    this.alumnoService.alumnos$().forEach(alumno => {
-      console.log(alumno.nombre);
-    });
   }
   crearCarrera() {
     const nuevaCarrera = new Carrera(

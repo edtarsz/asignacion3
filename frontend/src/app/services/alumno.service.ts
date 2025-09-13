@@ -14,7 +14,14 @@ export class AlumnoService {
     readonly alumnos$ = this.alumnos.asReadonly();
 
     agregarAlumno(alumno: Alumno) {
-        this.httpClient.post<Alumno>(this.apiURL, alumno).subscribe();
+        this.httpClient.post<Alumno>(this.apiURL, alumno).subscribe({
+            next: (res) => {
+                alert('Alumno agregado exitosamente');
+            },
+            error: (err) => {
+                alert('Error al agregar el alumno');
+            }
+        });
     }
 
     eliminarAlumno(id: string) {

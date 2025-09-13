@@ -15,21 +15,28 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post('/api/carreras', async (req, res) => {
-  const nombre = req.body.nombre;
-  const carrera = await prisma.carrera.create({
-    data: { nombre },
-  });
-  res.json(carrera);
-  console.log('Carrera creada:', carrera);
+  try {
+    const nombre = req.body.nombre;
+    const carrera = await prisma.carrera.create({
+      data: { nombre },
+    });
+
+    res.status(201).json(carrera);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear la carrera' });
+  }
 });
 
 app.post('/api/alumnos', async (req, res) => {
-  const { nombre, apellidos, carreraId } = req.body;
-  const alumno = await prisma.alumno.create({
-    data: { nombre, apellidos, carreraId },
-  });
-  res.json(alumno);
-  console.log('Alumno creado:', alumno);
+  try {
+    const { nombre, apellidos, carreraId } = req.body;
+    const alumno = await prisma.alumno.create({
+      data: { nombre, apellidos, carreraId },
+    });
+    res.status(201).json(alumno);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear el alumno' });
+  }
 });
 
 app.listen(PORT, () => {

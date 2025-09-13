@@ -14,7 +14,14 @@ export class CarreraService {
   readonly carreras$ = this.carreras.asReadonly();
 
   agregarCarrera(carrera: Carrera) {
-    this.httpClient.post<Carrera>(this.apiURL, carrera).subscribe();
+    this.httpClient.post<Carrera>(this.apiURL, carrera).subscribe({
+      next: (res) => {
+        alert('Carrera agregada exitosamente');
+      },
+      error: (err) => {
+        alert('Error al agregar la carrera');
+      }
+    });
   }
 
   eliminarCarrera(id: string) {
