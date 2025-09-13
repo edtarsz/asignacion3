@@ -15,8 +15,4 @@ export class Main {
   onClickOperacion(operacion: string) {
     this.interfaceService.setOperacion(operacion);
   }
-
-  onClickEntidad(entidad: string) {
-    this.interfaceService.setEntidad(entidad);
-  }
 }

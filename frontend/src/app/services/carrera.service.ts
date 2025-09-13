@@ -1,16 +1,20 @@
-import { Injectable, signal } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
 import { carreras } from "./data.js";
 import { Carrera } from "../models/carrera.js";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarreraService {
+  private apiURL = 'http://localhost:3000/api/carreras';
+  private httpClient = inject(HttpClient);
+
   carreras = signal<Carrera[]>(carreras);
   readonly carreras$ = this.carreras.asReadonly();
 
   agregarCarrera(carrera: Carrera) {
-    this.carreras.update(carreras => [...carreras, carrera]);
+    this.httpClient.post<Carrera>(this.apiURL, carrera).subscribe();
   }
 
   eliminarCarrera(id: string) {

@@ -1,16 +1,20 @@
-import { Injectable, signal } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
 import { alumnos } from "./data.js";
 import { Alumno } from "../models/alumno.js";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AlumnoService {
+    private apiURL = 'http://localhost:3000/api/alumnos';
+    private httpClient = inject(HttpClient);
+
     alumnos = signal<Alumno[]>(alumnos);
     readonly alumnos$ = this.alumnos.asReadonly();
 
     agregarAlumno(alumno: Alumno) {
-        this.alumnos.update(alumnos => [...alumnos, alumno]);
+        this.httpClient.post<Alumno>(this.apiURL, alumno).subscribe();
     }
 
     eliminarAlumno(id: string) {
