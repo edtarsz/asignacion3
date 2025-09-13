@@ -24,6 +24,7 @@ app.post('/api/carreras', async (req, res) => {
 
     res.status(201).json(carrera);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Error al crear la carrera' });
   }
 });
@@ -36,6 +37,7 @@ app.post('/api/alumnos', async (req, res) => {
     });
     res.status(201).json(alumno);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Error al crear el alumno' });
   }
 });

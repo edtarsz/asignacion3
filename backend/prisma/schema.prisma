@@ -15,14 +15,18 @@ datasource db {
 
 model Alumno {
   id        Int      @id @default(autoincrement())
-  nombre    String
+  nombre    String   
   apellidos String
-  carrera   Carrera? @relation(fields: [carreraId], references: [id])
-  carreraId Int?
+  carrera   Carrera? @relation(fields: [carreraId], references: [id], onDelete: SetNull)
+  carreraId Int?     @map("carrera_id")
+
+  @@map("alumnos")
 }
 
 model Carrera {
   id      Int      @id @default(autoincrement())
-  nombre  String
+  nombre  String   @unique
   alumnos Alumno[]
+
+  @@map("carreras")
 }
