@@ -1,10 +1,11 @@
-import { Component, computed, effect, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, OnInit } from '@angular/core';
 import { InterfaceService } from '../../../services/interface.service';
 import { CarreraService } from '../../../services/carrera.service';
 import { Carrera } from '../../../models/carrera';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Alumno } from '../../../models/alumno';
 import { AlumnoService } from '../../../services/alumno.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-agregar',
@@ -16,16 +17,17 @@ import { AlumnoService } from '../../../services/alumno.service';
 export class Agregar implements OnInit {
   myForm!: FormGroup;
 
+  private fb = inject(FormBuilder);
+  public interfaceService = inject(InterfaceService)
+  public carreraService = inject(CarreraService);
+  public alumnoService = inject(AlumnoService);
+  private router = inject(Router);
+
   ngOnInit() {
     this.crearFormulario();
   }
 
-  constructor(
-    private fb: FormBuilder,
-    public interfaceService: InterfaceService,
-    public carreraService: CarreraService,
-    public alumnoService: AlumnoService
-  ) {
+  constructor() {
     // Computed para valores derivados (mutar, llamar servicios, reconstruir formulario)
     // Effect para efecto colateral
     effect(() => {
@@ -76,19 +78,8 @@ export class Agregar implements OnInit {
     this.carreraService.agregarCarrera(nuevaCarrera);
   }
 
-  get nombreEstudiante() {
-    return this.myForm?.get('nombreEstudiante');
-  }
-
-  get apellidosEstudiante() {
-    return this.myForm?.get('apellidosEstudiante');
-  }
-
-  get nombreCarrera() {
-    return this.myForm?.get('nombreCarrera');
-  }
-
-  get carreraSeleccionada() {
-    return this.myForm?.get('carreraSeleccionada');
-  }
+  get nombreEstudiante() { return this.myForm?.get('nombreEstudiante'); }
+  get apellidosEstudiante() { return this.myForm?.get('apellidosEstudiante'); }
+  get nombreCarrera() { return this.myForm?.get('nombreCarrera'); }
+  get carreraSeleccionada() { return this.myForm?.get('carreraSeleccionada'); }
 }

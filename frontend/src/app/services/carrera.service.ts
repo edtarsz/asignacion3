@@ -17,7 +17,7 @@ export class CarreraService {
     this.carreras.update(carreras => carreras.filter(carrera => carrera.id !== id));
   }
 
-  editarCarrera(carreraEditada: Carrera) {
+  actualizarCarrera(carreraEditada: Carrera) {
     this.carreras.update(carreras => carreras.map(carrera =>
       carrera.id === carreraEditada.id ? carreraEditada : carrera
     ));

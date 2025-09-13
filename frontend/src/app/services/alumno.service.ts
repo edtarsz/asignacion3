@@ -17,9 +17,18 @@ export class AlumnoService {
         this.alumnos.update(alumnos => alumnos.filter(alumno => alumno.id !== id));
     }
 
-    editarAlumno(alumnoEditado: Alumno) {
+    actualizarAlumno(alumnoEditado: Alumno) {
         this.alumnos.update(alumnos => alumnos.map(alumno =>
             alumno.id === alumnoEditado.id ? alumnoEditado : alumno
         ));
+    }
+
+    asignarCarreraAlumno(alumnoId: string, carrera: string) {
+        this.alumnos.update(alumnos => alumnos.map(alumno => {
+            if (alumno.id === alumnoId) {
+                alumno.carrera = carrera ? { id: '', nombre: carrera } : null;
+            }
+            return alumno;
+        }));
     }
 }

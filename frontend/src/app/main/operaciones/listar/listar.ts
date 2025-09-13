@@ -1,7 +1,4 @@
-import { Component } from '@angular/core';
-import { alumnos, carreras } from '../../../services/data.js';
-import { Alumno } from '../../../models/alumno.js';
-import { Carrera } from '../../../models/carrera.js';
+import { Component, inject } from '@angular/core';
 import { InterfaceService } from '../../../services/interface.service.js';
 import { AlumnoService } from '../../../services/alumno.service.js';
 import { CarreraService } from '../../../services/carrera.service.js';
@@ -13,13 +10,7 @@ import { CarreraService } from '../../../services/carrera.service.js';
   styleUrl: './listar.css'
 })
 export class Listar {
-  constructor(
-    public interfaceService: InterfaceService,
-    public alumnoService: AlumnoService,
-    public carreraService: CarreraService
-  ) { }
-
-  eliminar() {
-
-  }
+  public interfaceService = inject(InterfaceService);
+  public carreraService = inject(CarreraService);
+  public alumnoService = inject(AlumnoService);
 }

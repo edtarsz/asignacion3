@@ -1,0 +1,32 @@
+<form [formGroup]="asignarForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+    <div class="flex flex-col gap-2">
+        <label for="select-estudiante" class="text-white font-medium">1. Selecciona un estudiante</label>
+        <select id="select-estudiante" formControlName="alumnoId"
+            class="w-full bg-[var(--input-background-color)] py-3 px-4 rounded-lg text-white border border-[rgba(255,255,255,0.3)] focus:outline-none appearance-none">
+            <option value="" disabled>Elige un estudiante</option>
+            @for (estudiante of alumnoService.alumnos$(); track estudiante.id) {
+            <option [value]="estudiante.id" class="bg-[var(--card-background-color)] text-white">
+                {{ estudiante.nombre }} {{ estudiante.apellidos }}
+            </option>
+            }
+        </select>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <label for="select-carrera" class="text-white font-medium">2. Selecciona una carrera</label>
+        <select id="select-carrera" formControlName="carreraNombre"
+            class="w-full bg-[var(--input-background-color)] py-3 px-4 rounded-lg text-white border border-[rgba(255,255,255,0.3)] focus:outline-none appearance-none">
+            <option value="" disabled>Elige una carrera</option>
+            @for (carrera of carreraService.carreras$(); track carrera.id) {
+            <option [value]="carrera.nombre" class="bg-[var(--card-background-color)] text-white">
+                {{ carrera.nombre }}
+            </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" [disabled]="asignarForm.invalid"
+        class="w-full mt-4 bg-[var(--tertiary-color)] py-3 px-7 rounded-lg font-bold text-white cursor-pointer duration-200 ease-in-out hover:bg-opacity-80 disabled:bg-gray-500 disabled:cursor-not-allowed">
+        Asignar Carrera
+    </button>
+</form>

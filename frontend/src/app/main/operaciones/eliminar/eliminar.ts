@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { AlumnoService } from '../../../services/alumno.service';
 import { CarreraService } from '../../../services/carrera.service';
@@ -11,12 +11,12 @@ import { InterfaceService } from '../../../services/interface.service';
   styleUrl: './eliminar.css'
 })
 export class Eliminar {
-  constructor(
-    private fb: FormBuilder,
-    public interfaceService: InterfaceService,
-    public carreraService: CarreraService,
-    public alumnoService: AlumnoService
-  ) { }
+  private fb = inject(FormBuilder);
+  public interfaceService = inject(InterfaceService);
+  public carreraService = inject(CarreraService);
+  public alumnoService = inject(AlumnoService);
+
+  constructor() { }
 
   eliminar(id: string) {
     if (this.interfaceService.entidad$() === 'Estudiante') {
