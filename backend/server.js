@@ -1,11 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import 'dotenv/config';
-import { PrismaClient } from "@prisma/client";
 
 const app = express();
-const PORT = 3000;
-const prisma = new PrismaClient();
 
 const corsOptions = {
   origin: 'http://localhost:4200',
@@ -15,33 +11,12 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.post('/api/carreras', async (req, res) => {
-  try {
-    const nombre = req.body.nombre;
-    const carrera = await prisma.carrera.create({
-      data: { nombre },
-    });
-
-    res.status(201).json(carrera);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al crear la carrera' });
-  }
+app.get('/', (req, res) => {
+  res.send('API is running...');
 });
 
-app.post('/api/alumnos', async (req, res) => {
-  try {
-    const { nombre, apellidos, carreraId } = req.body;
-    const alumno = await prisma.alumno.create({
-      data: { nombre, apellidos, carreraId },
-    });
-    res.status(201).json(alumno);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al crear el alumno' });
-  }
-});
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
