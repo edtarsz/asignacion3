@@ -1,4 +1,4 @@
-import * as carreraService from '../services/carrera.service.js';
+import * as carreraService from "../services/carrera.service.js";
 
 export const create = async (req, res, next) => {
   try {
