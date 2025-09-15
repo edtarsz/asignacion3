@@ -1,24 +1,23 @@
 import { Carrera } from "./carrera";
 
 export class Alumno {
-    id: string;
+    id?: number;
     nombre: string;
     apellidos: string;
-    carrera: Carrera | null = null;
+    carreraId?: number | null;
 
-    constructor(nombre: string, apellidos: string, carrera?: Carrera) {
-        this.id = crypto.randomUUID()
+    constructor(nombre: string, apellidos: string, carreraId?: number | null) {
         this.nombre = nombre;
         this.apellidos = apellidos;
-        this.carrera = carrera || null;
+        this.carreraId = carreraId || null;
     }
 
     asignarCarrera(carrera: Carrera) {
-        this.carrera = carrera
+        this.carreraId = carrera.id;
     }
 
     desasignarCarrera() {
-        this.carrera = null
+        this.carreraId = null;
     }
 }
 

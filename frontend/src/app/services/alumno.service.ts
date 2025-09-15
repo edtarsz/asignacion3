@@ -7,7 +7,7 @@ import { HttpClient } from "@angular/common/http";
     providedIn: 'root'
 })
 export class AlumnoService {
-    private apiURL = 'http://localhost:3000/api/alumnos';
+    private apiURL = 'http://localhost:3000/api/v1/alumnos';
     private httpClient = inject(HttpClient);
 
     alumnos = signal<Alumno[]>(alumnos);
@@ -25,7 +25,7 @@ export class AlumnoService {
     }
 
     eliminarAlumno(id: string) {
-        this.alumnos.update(alumnos => alumnos.filter(alumno => alumno.id !== id));
+        // this.alumnos.update(alumnos => alumnos.filter(alumno => alumno.id !== id));
     }
 
     actualizarAlumno(alumnoEditado: Alumno) {
@@ -35,11 +35,11 @@ export class AlumnoService {
     }
 
     asignarCarreraAlumno(alumnoId: string, carrera: string) {
-        this.alumnos.update(alumnos => alumnos.map(alumno => {
-            if (alumno.id === alumnoId) {
-                alumno.carrera = carrera ? { id: '', nombre: carrera } : null;
-            }
-            return alumno;
-        }));
+        // this.alumnos.update(alumnos => alumnos.map(alumno => {
+        //     if (alumno.id === alumnoId) {
+        //         alumno.carrera = carrera ? { id: '', nombre: carrera } : null;
+        //     }
+        //     return alumno;
+        // }));
     }
 }

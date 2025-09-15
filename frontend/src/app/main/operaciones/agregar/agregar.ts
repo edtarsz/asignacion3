@@ -64,10 +64,11 @@ export class Agregar implements OnInit {
     const nuevoEstudiante = new Alumno(
       this.nombreEstudiante?.value || '',
       this.apellidosEstudiante?.value || '',
-      new Carrera('Sin asignar')
+      this.carreraSeleccionada?.value || null
     );
     this.alumnoService.agregarAlumno(nuevoEstudiante);
   }
+
   crearCarrera() {
     const nuevaCarrera = new Carrera(
       this.nombreCarrera?.value || ''

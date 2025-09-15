@@ -1,0 +1,20 @@
+FROM node:22 as build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+
+# Compilar Angular en modo producción
+RUN npm run build -- --configuration production
+
+# Etapa de producción con Nginx
+FROM nginx:alpine
+
+# Copiar la build al contenedor de Nginx
+COPY --from=build /app/dist/frontend/ /usr/share/nginx/html
+
+# Nginx configuración
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Exponer puerto
+EXPOSE 80
