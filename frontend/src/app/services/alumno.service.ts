@@ -15,7 +15,8 @@ export class AlumnoService {
     readonly alumnos$ = this.alumnos.asReadonly();
 
     agregarAlumno(alumno: Alumno): Observable<Alumno> {
-        return this.httpClient.post<Alumno>(this.apiURL, alumno).pipe(
+        const url = this.apiURL;
+        return this.httpClient.post<Alumno>(url, alumno).pipe(
             tap(() => this.obtenerAlumnos().subscribe())
         );
     }
@@ -35,7 +36,8 @@ export class AlumnoService {
     }
 
     obtenerAlumnos(): Observable<Alumno[]> {
-        return this.httpClient.get<Alumno[]>(this.apiURL).pipe(tap(res => this.alumnos.set(res)));
+        const url = this.apiURL;
+        return this.httpClient.get<Alumno[]>(url).pipe(tap(res => this.alumnos.set(res)));
     }
 
     obtenerAlumnoPorId(id: number): Observable<Alumno> {

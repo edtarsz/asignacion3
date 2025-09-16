@@ -14,17 +14,20 @@ export class CarreraService {
   readonly carreras$ = this.carreras.asReadonly();
 
   agregarCarrera(carrera: Carrera): Observable<Carrera> {
-    return this.httpClient.post<Carrera>(this.apiURL, carrera).pipe(
+    const url = this.apiURL;
+    return this.httpClient.post<Carrera>(url, carrera).pipe(
       tap(() => this.obtenerCarreras().subscribe())
     );
   }
 
   obtenerCarreras(): Observable<Carrera[]> {
-    return this.httpClient.get<Carrera[]>(this.apiURL).pipe(tap(res => this.carreras.set(res)));
+    const url = this.apiURL;
+    return this.httpClient.get<Carrera[]>(url).pipe(tap(res => this.carreras.set(res)));
   }
 
   eliminarCarrera(id: number): Observable<void> {
-    return this.httpClient.delete<void>(`${this.apiURL}/${id}`).pipe(
+    const url = `${this.apiURL}/${id}`;
+    return this.httpClient.delete<void>(url).pipe(
       tap(() => this.obtenerCarreras().subscribe())
     );
   }
