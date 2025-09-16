@@ -6,12 +6,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=mi_base
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/mi_base?schema=public
     depends_on:
       - postgres
     networks:

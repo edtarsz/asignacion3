@@ -4,5 +4,9 @@ COPY package*.json ./
 RUN npm install --production
 COPY . .
 RUN npx prisma generate
+
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["./entrypoint.sh"]
