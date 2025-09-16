@@ -13,28 +13,25 @@ export class CarreraService {
   carreras = signal<Carrera[]>([]);
   readonly carreras$ = this.carreras.asReadonly();
 
-  agregarCarrera(carrera: Carrera) {
-    this.httpClient.post<Carrera>(this.apiURL, carrera).subscribe({
-      next: (res) => {
-        alert('Carrera agregada exitosamente');
-      },
-      error: (err) => {
-        alert('Error al agregar la carrera');
-      }
-    });
+  agregarCarrera(carrera: Carrera): Observable<Carrera> {
+    return this.httpClient.post<Carrera>(this.apiURL, carrera).pipe(
+      tap(() => this.obtenerCarreras().subscribe())
+    );
   }
 
   obtenerCarreras(): Observable<Carrera[]> {
     return this.httpClient.get<Carrera[]>(this.apiURL).pipe(tap(res => this.carreras.set(res)));
   }
 
-  // eliminarCarrera(id: string) {
-  //   this.carreras.update(carreras => carreras.filter(carrera => carrera.id !== id));
-  // }
+  eliminarCarrera(id: number): Observable<void> {
+    return this.httpClient.delete<void>(`${this.apiURL}/${id}`).pipe(
+      tap(() => this.obtenerCarreras().subscribe())
+    );
+  }
 
-  // actualizarCarrera(carreraEditada: Carrera) {
-  //   this.carreras.update(carreras => carreras.map(carrera =>
-  //     carrera.id === carreraEditada.id ? carreraEditada : carrera
-  //   ));
-  // }
+  actualizarCarrera(carreraEditada: Carrera): Observable<Carrera> {
+    return this.httpClient.put<Carrera>(`${this.apiURL}/${carreraEditada.id}`, carreraEditada).pipe(
+      tap(() => this.obtenerCarreras().subscribe())
+    );
+  }
 }

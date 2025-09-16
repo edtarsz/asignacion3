@@ -25,7 +25,7 @@ export class Agregar {
   // public carreras = computed(() => this.carreraService.carreras$());
 
   // Si no transformas los datos, es mejor usar Signal directamente
-  public carreras: Signal<Carrera[]> = this.carreraService.carreras$;
+  // public carreras: Signal<Carrera[]> = this.carreraService.carreras$;
 
   constructor() {
     // Computed para valores derivados
@@ -76,7 +76,7 @@ export class Agregar {
         alert('Error al agregar el estudiante: ' + err.message);
       },
       complete: () => {
-        this.myForm.reset();
+        this.crearFormulario(this.interfaceService.entidad$());
       }
     });
   }
@@ -84,7 +84,7 @@ export class Agregar {
   buildAlumno(): Alumno {
     const formValue = this.myForm.value;
 
-    // el más en el payload es para convertir string a number
+    // el + en el payload es para convertir string a number
     const payload = {
       nombre: formValue.nombreEstudiante || '',
       apellidos: formValue.apellidosEstudiante || '',
@@ -100,11 +100,25 @@ export class Agregar {
   }
 
   crearCarrera() {
-    const formValue = this.myForm.value;
+    const nuevaCarrera = this.buildCarrera();
 
-    const nuevaCarrera = new Carrera(
+    this.carreraService.agregarCarrera(nuevaCarrera).subscribe({
+      next: (valor) => {
+        alert(`Carrera ${valor.nombre} agregada exitosamente`);
+      },
+      error: (err) => {
+        alert('Error al agregar la carrera: ' + err.message);
+      },
+      complete: () => {
+        this.crearFormulario(this.interfaceService.entidad$());
+      }
+    });
+  }
+
+  buildCarrera(): Carrera {
+    const formValue = this.myForm.value;
+    return new Carrera(
       formValue.nombreCarrera || ''
     );
-    this.carreraService.agregarCarrera(nuevaCarrera);
   }
 }

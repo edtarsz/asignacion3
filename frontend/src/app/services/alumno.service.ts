@@ -20,7 +20,7 @@ export class AlumnoService {
         );
     }
 
-    eliminarAlumno(id: string): Observable<void> {
+    eliminarAlumno(id: number): Observable<void> {
         const url = `${this.apiURL}/${id}`;
         return this.httpClient.delete<void>(url).pipe(
             tap(() => this.obtenerAlumnos().subscribe())
@@ -29,21 +29,26 @@ export class AlumnoService {
 
     actualizarAlumno(alumnoEditado: Alumno): Observable<Alumno> {
         const url = `${this.apiURL}/${alumnoEditado.id}`;
-        return this.httpClient.put<Alumno>(url, alumnoEditado).pipe(
+        return this.httpClient.patch<Alumno>(url, alumnoEditado).pipe(
             tap(() => this.obtenerAlumnos().subscribe())
         );
     }
 
-    asignarCarreraAlumno(alumnoId: string, carrera: string) {
-        // this.alumnos.update(alumnos => alumnos.map(alumno => {
-        //     if (alumno.id === alumnoId) {
-        //         alumno.carrera = carrera ? { id: '', nombre: carrera } : null;
-        //     }
-        //     return alumno;
-        // }));
-    }
-
     obtenerAlumnos(): Observable<Alumno[]> {
         return this.httpClient.get<Alumno[]>(this.apiURL).pipe(tap(res => this.alumnos.set(res)));
+    }
+
+    obtenerAlumnoPorId(id: number): Observable<Alumno> {
+        const url = `${this.apiURL}/${id}`;
+        return this.httpClient.get<Alumno>(url).pipe();
+    }
+
+    asignarAlumnoACarrera(alumnoId: number, carreraId: number): Observable<Alumno> {
+        const url = `${this.apiURL}/${alumnoId}`;
+        const payload = { carreraId: carreraId };
+
+        return this.httpClient.patch<Alumno>(url, payload).pipe(
+            tap(() => this.obtenerAlumnos().subscribe())
+        );
     }
 }

@@ -1,6 +1,6 @@
-<!-- <div class="w-full flex flex-col gap-2">
+<div class="w-full flex flex-col gap-2">
     @if (interfaceService.entidad$() === 'Estudiante') {
-    @for (alumno of alumnoService.alumnos$(); track $index) {
+    @for (alumno of alumnoService.alumnos$(); track alumno.id) {
     <div class="w-full flex flex-col gap-2">
         <div class="w-full flex justify-between items-center">
             <div>
@@ -9,7 +9,7 @@
             </div>
             <button type="submit"
                 class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out font-bold"
-                (click)="eliminar(alumno.id)">
+                (click)="eliminar(alumno.id!)">
                 Eliminar
             </button>
         </div>
@@ -17,16 +17,16 @@
     </div>
     }
     } @else if (interfaceService.entidad$() === 'Carrera') {
-    @for (carrera of carreraService.carreras$(); track $index) {
+    @for (carrera of carreraService.carreras$(); track carrera.id) {
     <div class="w-full flex justify-between items-center">
         <p class="font-bold">{{ carrera.nombre }}</p>
         <button type="submit"
             class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out font-bold"
-            (click)="eliminar(carrera.id)">
+            (click)="eliminar(carrera.id!)">
             Eliminar
         </button>
     </div>
     <hr>
     }
     }
-</div> -->
+</div>
