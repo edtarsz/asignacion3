@@ -49,24 +49,24 @@ export class Actualizar {
     }
   }
 
-  onEstudianteChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const estudianteId = selectElement.value;
-    this.selectedEstudianteId = estudianteId;
+  // onEstudianteChange(event: Event) {
+  //   const selectElement = event.target as HTMLSelectElement;
+  //   const estudianteId = selectElement.value;
+  //   this.selectedEstudianteId = estudianteId;
 
-    if (estudianteId) {
-      const estudiante = this.alumnoService.alumnos$().find(e => e.id === estudianteId);
-      if (estudiante) {
-        this.myForm.patchValue({
-          nombreEstudiante: estudiante.nombre,
-          apellidosEstudiante: estudiante.apellidos,
-          carreraSeleccionada: estudiante.carrera?.nombre || ''
-        });
-      }
-    } else {
-      this.myForm.reset();
-    }
-  }
+  //   if (estudianteId) {
+  //     const estudiante = this.alumnoService.alumnos$().find(e => e.id === estudianteId);
+  //     if (estudiante) {
+  //       this.myForm.patchValue({
+  //         nombreEstudiante: estudiante.nombre,
+  //         apellidosEstudiante: estudiante.apellidos,
+  //         carreraSeleccionada: estudiante.carrera?.nombre || ''
+  //       });
+  //     }
+  //   } else {
+  //     this.myForm.reset();
+  //   }
+  // }
 
   onCarreraChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
@@ -87,7 +87,7 @@ export class Actualizar {
 
   onSubmit() {
     if (this.interfaceService.entidad$() === 'Estudiante' && this.selectedEstudianteId) {
-      this.actualizarEstudiante();
+      // this.actualizarEstudiante();
     } else if (this.interfaceService.entidad$() === 'Carrera' && this.selectedCarreraNombre) {
       this.actualizarCarrera();
     }
@@ -99,23 +99,23 @@ export class Actualizar {
     this.interfaceService.setOperacion('Listar');
   }
 
-  actualizarEstudiante() {
-    const estudiante = this.alumnoService.alumnos$().find(e => e.id === this.selectedEstudianteId);
-    if (!estudiante) {
-      return;
-    }
+  // actualizarEstudiante() {
+  //   const estudiante = this.alumnoService.alumnos$().find(e => e.id === this.selectedEstudianteId);
+  //   if (!estudiante) {
+  //     return;
+  //   }
 
-    const carreraSeleccionadaNombre = this.carreraSeleccionada?.value;
-    const nuevaCarrera = new Carrera(carreraSeleccionadaNombre);
-    const estudianteActualizado = new Alumno(
-      this.nombreEstudiante?.value || estudiante.nombre,
-      this.apellidosEstudiante?.value || estudiante.apellidos,
-      nuevaCarrera
-    );
-    estudianteActualizado.id = estudiante.id;
+  //   const carreraSeleccionadaNombre = this.carreraSeleccionada?.value;
+  //   const nuevaCarrera = new Carrera(carreraSeleccionadaNombre);
+  //   const estudianteActualizado = new Alumno(
+  //     this.nombreEstudiante?.value || estudiante.nombre,
+  //     this.apellidosEstudiante?.value || estudiante.apellidos,
+  //     nuevaCarrera
+  //   );
+  //   estudianteActualizado.id = estudiante.id;
 
-    this.alumnoService.actualizarAlumno(estudianteActualizado);
-  }
+  //   this.alumnoService.actualizarAlumno(estudianteActualizado);
+  // }
 
   actualizarCarrera() {
     const carrera = this.carreraService.carreras$().find(c => c.nombre === this.selectedCarreraNombre);
@@ -126,7 +126,7 @@ export class Actualizar {
     const nuevaCarrera = new Carrera(this.nombreCarrera?.value || carrera.nombre);
     nuevaCarrera.id = carrera.id;
 
-    this.carreraService.actualizarCarrera(nuevaCarrera);
+    // this.carreraService.actualizarCarrera(nuevaCarrera);
   }
 
   get nombreEstudiante() { return this.myForm?.get('nombreEstudiante'); }

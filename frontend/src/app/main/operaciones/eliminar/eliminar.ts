@@ -22,7 +22,7 @@ export class Eliminar {
     if (this.interfaceService.entidad$() === 'Estudiante') {
       this.alumnoService.eliminarAlumno(id);
     } else if (this.interfaceService.entidad$() === 'Carrera') {
-      this.carreraService.eliminarCarrera(id);
+      // this.carreraService.eliminarCarrera(id);
     }
   }
 }

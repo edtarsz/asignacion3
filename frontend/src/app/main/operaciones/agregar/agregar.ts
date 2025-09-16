@@ -1,11 +1,10 @@
-import { Component, computed, effect, inject, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, OnInit, Signal } from '@angular/core';
 import { InterfaceService } from '../../../services/interface.service';
 import { CarreraService } from '../../../services/carrera.service';
 import { Carrera } from '../../../models/carrera';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Alumno } from '../../../models/alumno';
 import { AlumnoService } from '../../../services/alumno.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-agregar',
@@ -14,30 +13,38 @@ import { Router } from '@angular/router';
   templateUrl: './agregar.html',
   styleUrls: ['./agregar.css']
 })
-export class Agregar implements OnInit {
+export class Agregar {
   myForm!: FormGroup;
 
   private fb = inject(FormBuilder);
   public interfaceService = inject(InterfaceService)
   public carreraService = inject(CarreraService);
   public alumnoService = inject(AlumnoService);
-  private router = inject(Router);
 
-  ngOnInit() {
-    this.crearFormulario();
-  }
+  // Computed para valores derivados (mutar, llamar servicios, reconstruir formulario)
+  // public carreras = computed(() => this.carreraService.carreras$());
+
+  // Si no transformas los datos, es mejor usar Signal directamente
+  public carreras: Signal<Carrera[]> = this.carreraService.carreras$;
 
   constructor() {
-    // Computed para valores derivados (mutar, llamar servicios, reconstruir formulario)
-    // Effect para efecto colateral
+    // Computed para valores derivados
+    // Effect para efectos secundarios
+    // Cada que se cambia de entidad se reconstruye el formulario
     effect(() => {
-      this.interfaceService.entidad$();
-      this.crearFormulario();
+      const entidadActual = this.interfaceService.entidad$();
+      this.crearFormulario(entidadActual);
+
+      if (entidadActual === 'Estudiante') {
+        this.carreraService.obtenerCarreras().subscribe({
+          error: (err) => console.error('Error al cargar las carreras:', err)
+        });
+      }
     });
   }
 
-  private crearFormulario() {
-    if (this.interfaceService.entidad$() === 'Estudiante') {
+  private crearFormulario(entidad: string) {
+    if (entidad === 'Estudiante') {
       this.myForm = this.fb.group({
         nombreEstudiante: [''],
         apellidosEstudiante: [''],
@@ -56,28 +63,48 @@ export class Agregar implements OnInit {
     } else if (this.interfaceService.entidad$() === 'Carrera') {
       this.crearCarrera();
     }
-
-    this.myForm.reset();
   }
 
   crearEstudiante() {
-    const nuevoEstudiante = new Alumno(
-      this.nombreEstudiante?.value || '',
-      this.apellidosEstudiante?.value || '',
-      this.carreraSeleccionada?.value || null
+    const nuevoEstudiante = this.buildAlumno();
+
+    this.alumnoService.agregarAlumno(nuevoEstudiante).subscribe({
+      next: (valor) => {
+        alert(`Estudiante ${valor.nombre} agregado exitosamente`);
+      },
+      error: (err) => {
+        alert('Error al agregar el estudiante: ' + err.message);
+      },
+      complete: () => {
+        this.myForm.reset();
+      }
+    });
+  }
+
+  buildAlumno(): Alumno {
+    const formValue = this.myForm.value;
+
+    // el más en el payload es para convertir string a number
+    const payload = {
+      nombre: formValue.nombreEstudiante || '',
+      apellidos: formValue.apellidosEstudiante || '',
+      carreraId: formValue.carreraSeleccionada ? +formValue.carreraSeleccionada : null
+    }
+
+    // Nombres coincidan con el servidor express
+    return new Alumno(
+      payload.nombre,
+      payload.apellidos,
+      payload.carreraId
     );
-    this.alumnoService.agregarAlumno(nuevoEstudiante);
   }
 
   crearCarrera() {
+    const formValue = this.myForm.value;
+
     const nuevaCarrera = new Carrera(
-      this.nombreCarrera?.value || ''
+      formValue.nombreCarrera || ''
     );
     this.carreraService.agregarCarrera(nuevaCarrera);
   }
-
-  get nombreEstudiante() { return this.myForm?.get('nombreEstudiante'); }
-  get apellidosEstudiante() { return this.myForm?.get('apellidosEstudiante'); }
-  get nombreCarrera() { return this.myForm?.get('nombreCarrera'); }
-  get carreraSeleccionada() { return this.myForm?.get('carreraSeleccionada'); }
 }

@@ -1,16 +1,16 @@
 import { inject, Injectable, signal } from "@angular/core";
-import { carreras } from "./data.js";
 import { Carrera } from "../models/carrera.js";
 import { HttpClient } from "@angular/common/http";
+import { Observable, tap } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CarreraService {
-  private apiURL = 'http://localhost:3000/api/carreras';
+  private apiURL = 'http://localhost:3000/api/v1/carreras';
   private httpClient = inject(HttpClient);
 
-  carreras = signal<Carrera[]>(carreras);
+  carreras = signal<Carrera[]>([]);
   readonly carreras$ = this.carreras.asReadonly();
 
   agregarCarrera(carrera: Carrera) {
@@ -24,13 +24,17 @@ export class CarreraService {
     });
   }
 
-  eliminarCarrera(id: string) {
-    this.carreras.update(carreras => carreras.filter(carrera => carrera.id !== id));
+  obtenerCarreras(): Observable<Carrera[]> {
+    return this.httpClient.get<Carrera[]>(this.apiURL).pipe(tap(res => this.carreras.set(res)));
   }
 
-  actualizarCarrera(carreraEditada: Carrera) {
-    this.carreras.update(carreras => carreras.map(carrera =>
-      carrera.id === carreraEditada.id ? carreraEditada : carrera
-    ));
-  }
+  // eliminarCarrera(id: string) {
+  //   this.carreras.update(carreras => carreras.filter(carrera => carrera.id !== id));
+  // }
+
+  // actualizarCarrera(carreraEditada: Carrera) {
+  //   this.carreras.update(carreras => carreras.map(carrera =>
+  //     carrera.id === carreraEditada.id ? carreraEditada : carrera
+  //   ));
+  // }
 }
