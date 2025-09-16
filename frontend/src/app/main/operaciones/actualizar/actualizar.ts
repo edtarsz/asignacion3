@@ -1,136 +1,142 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, Signal } from '@angular/core';
 import { FormGroup, FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Alumno } from '../../../models/alumno';
 import { Carrera } from '../../../models/carrera';
 import { AlumnoService } from '../../../services/alumno.service';
 import { CarreraService } from '../../../services/carrera.service';
 import { InterfaceService } from '../../../services/interface.service';
 import { Router } from '@angular/router';
+import { Alumno } from '../../../models/alumno';
 
 @Component({
   selector: 'app-actualizar',
+  standalone: true,
   imports: [FormsModule, ReactiveFormsModule],
   templateUrl: './actualizar.html',
   styleUrl: './actualizar.css'
 })
 export class Actualizar {
-  myForm!: FormGroup;
-  selectedEstudianteId: string | null = null;
-  selectedCarreraNombre: string | null = null;
-
   private fb = inject(FormBuilder);
+  myForm: FormGroup = this.fb.group({});
+
   public interfaceService = inject(InterfaceService);
   public carreraService = inject(CarreraService);
   public alumnoService = inject(AlumnoService);
   private router = inject(Router);
 
-  ngOnInit() {
-    this.crearFormulario();
-  }
+  public alumnos: Signal<Alumno[]> = this.alumnoService.alumnos$;
+  public carreras: Signal<Carrera[]> = this.carreraService.carreras$;
 
   constructor() {
     effect(() => {
-      this.interfaceService.entidad$();
-      this.crearFormulario();
+      const entidadActual = this.interfaceService.entidad$();
+      this.crearFormulario(entidadActual);
     });
   }
 
-  private crearFormulario() {
-    if (this.interfaceService.entidad$() === 'Estudiante') {
-      this.myForm = this.fb.group({
-        nombreEstudiante: [''],
-        apellidosEstudiante: [''],
-        carreraSeleccionada: ['']
-      });
-    } else if (this.interfaceService.entidad$() === 'Carrera') {
-      this.myForm = this.fb.group({
-        nombreCarrera: ['']
-      });
-    }
-  }
-
-  // onEstudianteChange(event: Event) {
-  //   const selectElement = event.target as HTMLSelectElement;
-  //   const estudianteId = selectElement.value;
-  //   this.selectedEstudianteId = estudianteId;
-
-  //   if (estudianteId) {
-  //     const estudiante = this.alumnoService.alumnos$().find(e => e.id === estudianteId);
-  //     if (estudiante) {
-  //       this.myForm.patchValue({
-  //         nombreEstudiante: estudiante.nombre,
-  //         apellidosEstudiante: estudiante.apellidos,
-  //         carreraSeleccionada: estudiante.carrera?.nombre || ''
-  //       });
-  //     }
-  //   } else {
-  //     this.myForm.reset();
-  //   }
-  // }
-
-  onCarreraChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const carreraNombre = selectElement.value;
-    this.selectedCarreraNombre = carreraNombre;
-
-    if (carreraNombre) {
-      const carrera = this.carreraService.carreras$().find(c => c.nombre === carreraNombre);
-      if (carrera) {
-        this.myForm.patchValue({
-          nombreCarrera: carrera.nombre
-        });
-      }
+  private crearFormulario(entidad: string) {
+    if (entidad === 'Estudiante') {
+      this.formularioEstudiante();
+    } else if (entidad === 'Carrera') {
+      this.formularioCarrera();
     } else {
-      this.myForm.reset();
+      this.myForm = this.fb.group({});
     }
   }
 
-  onSubmit() {
-    if (this.interfaceService.entidad$() === 'Estudiante' && this.selectedEstudianteId) {
-      // this.actualizarEstudiante();
-    } else if (this.interfaceService.entidad$() === 'Carrera' && this.selectedCarreraNombre) {
-      this.actualizarCarrera();
-    }
+  private formularioEstudiante() {
+    this.myForm = this.fb.group({
+      estudianteId: [''],
+      nombreEstudiante: [''],
+      apellidosEstudiante: [''],
+      carreraId: ['']
+    });
 
-    this.myForm.reset();
-    this.selectedEstudianteId = null;
-    this.selectedCarreraNombre = null;
-    this.router.navigate(['/index/listar']);
-    this.interfaceService.setOperacion('Listar');
+    this.myForm.get('estudianteId')?.valueChanges.subscribe(idSeleccionado => {
+      if (!idSeleccionado) {
+        this.myForm.patchValue({ nombreEstudiante: '', apellidosEstudiante: '', carreraId: '' }, { emitEvent: false });
+        return;
+      }
+      const estudiante = this.alumnos().find(a => a.id === +idSeleccionado);
+      if (estudiante) {
+        this.myForm.patchValue({
+          nombreEstudiante: estudiante.nombre,
+          apellidosEstudiante: estudiante.apellidos,
+          carreraId: estudiante.carreraId || ''
+        }, { emitEvent: false });
+      }
+    });
+
+    this.alumnoService.obtenerAlumnos().subscribe({ error: (err) => console.error('Error al cargar alumnos:', err) });
+    this.carreraService.obtenerCarreras().subscribe({ error: (err) => console.error('Error al cargar carreras:', err) });
   }
 
-  // actualizarEstudiante() {
-  //   const estudiante = this.alumnoService.alumnos$().find(e => e.id === this.selectedEstudianteId);
-  //   if (!estudiante) {
-  //     return;
-  //   }
+  private formularioCarrera() {
+    this.myForm = this.fb.group({
+      carreraId: [''],
+      nombreCarrera: ['']
+    });
 
-  //   const carreraSeleccionadaNombre = this.carreraSeleccionada?.value;
-  //   const nuevaCarrera = new Carrera(carreraSeleccionadaNombre);
-  //   const estudianteActualizado = new Alumno(
-  //     this.nombreEstudiante?.value || estudiante.nombre,
-  //     this.apellidosEstudiante?.value || estudiante.apellidos,
-  //     nuevaCarrera
-  //   );
-  //   estudianteActualizado.id = estudiante.id;
+    this.myForm.get('carreraId')?.valueChanges.subscribe(idSeleccionado => {
+      if (!idSeleccionado) {
+        this.myForm.patchValue({ nombreCarrera: '' }, { emitEvent: false });
+        return;
+      }
+      const carrera = this.carreras().find(c => c.id === +idSeleccionado);
+      if (carrera) {
+        this.myForm.patchValue({ nombreCarrera: carrera.nombre }, { emitEvent: false });
+      }
+    });
 
-  //   this.alumnoService.actualizarAlumno(estudianteActualizado);
-  // }
+    this.carreraService.obtenerCarreras().subscribe({ error: (err) => console.error('Error al cargar carreras:', err) });
+  }
 
-  actualizarCarrera() {
-    const carrera = this.carreraService.carreras$().find(c => c.nombre === this.selectedCarreraNombre);
-    if (!carrera) {
+  actualizarEstudiante() {
+    const formValue = this.myForm.value;
+    if (!formValue.estudianteId) {
+      alert('Por favor, selecciona un estudiante para actualizar.');
       return;
     }
 
-    const nuevaCarrera = new Carrera(this.nombreCarrera?.value || carrera.nombre);
-    nuevaCarrera.id = carrera.id;
+    const payload = {
+      nombre: formValue.nombreEstudiante,
+      apellidos: formValue.apellidosEstudiante,
+      carreraId: formValue.carreraId ? +formValue.carreraId : null
+    };
 
-    // this.carreraService.actualizarCarrera(nuevaCarrera);
+    this.alumnoService.actualizarAlumno(formValue.estudianteId, payload).subscribe({
+      next: (res) => alert(`Estudiante '${res.nombre}' actualizado exitosamente.`),
+      error: (err) => alert('Error al actualizar: ' + (err.error?.message || err.message)),
+      complete: () => {
+        this.router.navigate(['/index/listar']);
+        this.interfaceService.setOperacion('Listar');
+      }
+    });
   }
 
-  get nombreEstudiante() { return this.myForm?.get('nombreEstudiante'); }
-  get apellidosEstudiante() { return this.myForm?.get('apellidosEstudiante'); }
-  get nombreCarrera() { return this.myForm?.get('nombreCarrera'); }
-  get carreraSeleccionada() { return this.myForm?.get('carreraSeleccionada'); }
+  actualizarCarrera() {
+    const formValue = this.myForm.value;
+    if (!formValue.carreraId) {
+      alert('Por favor, selecciona una carrera para actualizar.');
+      return;
+    }
+
+    const payload = { nombre: formValue.nombreCarrera };
+
+    this.carreraService.actualizarCarrera(formValue.carreraId, payload).subscribe({
+      next: (res) => alert(`Carrera '${res.nombre}' actualizada exitosamente.`),
+      error: (err) => alert('Error al actualizar: ' + (err.error?.message || err.message)),
+      complete: () => {
+        this.router.navigate(['/index/listar']);
+        this.interfaceService.setOperacion('Listar');
+      }
+    });
+  }
+
+  onSubmit() {
+    if (this.interfaceService.entidad$() === 'Estudiante') {
+      this.actualizarEstudiante();
+    } else if (this.interfaceService.entidad$() === 'Carrera') {
+      this.actualizarCarrera();
+    }
+  }
 }

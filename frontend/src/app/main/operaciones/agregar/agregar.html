@@ -12,8 +12,8 @@
         <label for="">Carrera</label>
         <select formControlName="carreraSeleccionada"
             class="w-full bg-[var(--input-background-color)] py-4 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none text-white appearance-none">
-            <option value="" class="bg-[var(--card-background-color)] text-white">Selecciona una carrera
-                (opcional)
+            <option value="" class="bg-[var(--card-background-color)] text-white">
+                Selecciona una carrera (opcional)
             </option>
             @for (carrera of carreraService.carreras$(); track carrera.id) {
             <option [value]="carrera.id" class="bg-[var(--card-background-color)] text-white">

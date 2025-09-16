@@ -29,8 +29,9 @@ export class CarreraService {
     );
   }
 
-  actualizarCarrera(carreraEditada: Carrera): Observable<Carrera> {
-    return this.httpClient.put<Carrera>(`${this.apiURL}/${carreraEditada.id}`, carreraEditada).pipe(
+  actualizarCarrera(id: number, carreraEditada: Carrera): Observable<Carrera> {
+    const url = `${this.apiURL}/${id}`;
+    return this.httpClient.patch<Carrera>(url, carreraEditada).pipe(
       tap(() => this.obtenerCarreras().subscribe())
     );
   }

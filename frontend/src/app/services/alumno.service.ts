@@ -27,8 +27,8 @@ export class AlumnoService {
         );
     }
 
-    actualizarAlumno(alumnoEditado: Alumno): Observable<Alumno> {
-        const url = `${this.apiURL}/${alumnoEditado.id}`;
+    actualizarAlumno(id: number, alumnoEditado: Alumno): Observable<Alumno> {
+        const url = `${this.apiURL}/${id}`;
         return this.httpClient.patch<Alumno>(url, alumnoEditado).pipe(
             tap(() => this.obtenerAlumnos().subscribe())
         );
@@ -45,9 +45,9 @@ export class AlumnoService {
 
     asignarAlumnoACarrera(alumnoId: number, carreraId: number): Observable<Alumno> {
         const url = `${this.apiURL}/${alumnoId}`;
-        const payload = { carreraId: carreraId };
 
-        return this.httpClient.patch<Alumno>(url, payload).pipe(
+        // Se usan las llaves porque se tiene que especificar el nombre del campo a actualizar
+        return this.httpClient.patch<Alumno>(url, { carreraId }).pipe(
             tap(() => this.obtenerAlumnos().subscribe())
         );
     }

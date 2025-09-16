@@ -1,60 +1,55 @@
-<!-- <form [formGroup]="myForm" class="w-full flex flex-col gap-5" (ngSubmit)="onSubmit()">
+@if (myForm) {
+<form [formGroup]="myForm" class="w-full flex flex-col gap-5" (ngSubmit)="onSubmit()">
     <div class="w-full flex flex-col gap-2">
         @if (interfaceService.entidad$() === 'Estudiante') {
-        <label for="select-estudiante">Selecciona un estudiante</label>
-        <select id="select-estudiante" (change)="onEstudianteChange($event)"
-            class="w-full bg-[var(--input-background-color)] py-4 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none text-white appearance-none">
-            <option value="" class="bg-[var(--card-background-color)] text-white">Selecciona un estudiante</option>
-            @for (estudiante of alumnoService.alumnos$(); track $index) {
-            <option [value]="estudiante.id" class="bg-[var(--card-background-color)] text-white">
-                {{ estudiante.nombre }} {{ estudiante.apellidos }}
+        <label for="select-alumno">Selecciona un alumno a editar</label>
+        <select formControlName="estudianteId" id="select-alumno"
+            class="w-full bg-[var(--input-background-color)] py-4 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none appearance-none">
+            <option value="" class="bg-[var(--card-background-color)] text-white">Selecciona un alumno</option>
+            @for (alumno of alumnoService.alumnos$(); track alumno.id) {
+            <option [value]="alumno.id" class="bg-[var(--card-background-color)] text-white">
+                {{ alumno.nombre }} {{ alumno.apellidos }}
             </option>
             }
         </select>
-        <label for="">Nombres</label>
-        <input type="text" placeholder="Primer nombre"
-            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none"
-            formControlName="nombreEstudiante">
-        <label for="">Apellidos</label>
-        <input type="text" placeholder="Primer nombre"
-            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none"
-            formControlName="apellidosEstudiante">
-        <label for="">Carrera</label>
-        <select formControlName="carreraSeleccionada"
-            class="w-full bg-[var(--input-background-color)] py-4 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus-within:outline-none text-white appearance-none">
-            <option value="" class="bg-[var(--card-background-color)] text-white">
-                @if (myForm.get('nombreEstudiante')?.value) {
-                No asignada
-                } @else {
-                Selecciona una carrera (opcional)
-                }
-            </option>
 
-            @for (carrera of carreraService.carreras$(); track $index) {
-            <option [value]="carrera.nombre" class="bg-[var(--card-background-color)] text-white">
-                {{ carrera.nombre }}
+        <label for="nombre-alumno">Nombres</label>
+        <input type="text" id="nombre-alumno" placeholder="Nombres del alumno" formControlName="nombreEstudiante"
+            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none">
+
+        <label for="apellidos-alumno">Apellidos</label>
+        <input type="text" id="apellidos-alumno" placeholder="Apellidos del alumno" formControlName="apellidosEstudiante"
+            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none">
+
+        <label for="carrera-alumno">Carrera</label>
+        <select id="carrera-alumno" formControlName="carreraId"
+            class="w-full bg-[var(--input-background-color)] py-4 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus-within:outline-none text-white appearance-none">
+            <option value="" class="bg-[var(--card-background-color)] text-white">No asignada</option>
+            @for (carrera of carreraService.carreras$(); track carrera.id) {
+            <option [value]="carrera.id" class="bg-[var(--card-background-color)] text-white">{{ carrera.nombre }}
             </option>
             }
         </select>
         } @else if (interfaceService.entidad$() === 'Carrera') {
-        <label for="select-carrera">Selecciona una carrera</label>
-        <select id="select-carrera" (change)="onCarreraChange($event)"
+        <label for="select-carrera">Selecciona una carrera a editar</label>
+        <select formControlName="carreraId" id="select-carrera"
             class="w-full bg-[var(--input-background-color)] py-4 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none text-white appearance-none">
             <option value="" class="bg-[var(--card-background-color)] text-white">Selecciona una carrera</option>
-            @for (carrera of carreraService.carreras$(); track $index) {
-            <option [value]="carrera.nombre" class="bg-[var(--card-background-color)] text-white">
-                {{ carrera.nombre }}
+            @for (carrera of carreraService.carreras$(); track carrera.id) {
+            <option [value]="carrera.id" class="bg-[var(--card-background-color)] text-white">{{ carrera.nombre }}
             </option>
             }
         </select>
-        <label for="">Nombre de la carrera</label>
-        <input type="text" placeholder="Introducir nombre de la carrera"
-            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none"
-            formControlName="nombreCarrera">
+
+        <label for="nombre-carrera">Nombre de la carrera</label>
+        <input type="text" id="nombre-carrera" placeholder="Nuevo nombre de la carrera" formControlName="nombreCarrera"
+            class="w-full bg-[var(--input-background-color)] py-3 px-5 rounded-lg font-['UbuntuRegular'] text-[0.9rem] border border-[rgba(255,255,255,0.3)] focus:outline-none">
         }
     </div>
+
     <button type="submit"
-        class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out font-bold">
+        class="bg-[var(--tertiary-color)] py-2 px-7 rounded-lg cursor-pointer duration-200 ease-in-out font-bold disabled:opacity-50 disabled:cursor-not-allowed">
         Actualizar
     </button>
-</form> -->
+</form>
+}
