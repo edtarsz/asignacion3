@@ -6,4 +6,4 @@ echo "Aplicando migraciones de la base de datos..."
 npx prisma migrate deploy
 
 echo "Iniciando el servidor..."
-npm start
+npm run dev

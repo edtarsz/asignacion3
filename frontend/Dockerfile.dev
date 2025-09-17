@@ -1,4 +1,4 @@
-FROM node:22 as build
+FROM node:22.19.0-bookworm-slim as build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
