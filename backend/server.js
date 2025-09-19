@@ -4,6 +4,8 @@ import carreraRoutes from "./src/routes/carrera.routes.js";
 import alumnoRoutes from "./src/routes/alumno.routes.js";
 import errorHandler from "./src/middlewares/errorHandler.js";
 
+import { sequelize } from "./src/models/index.js";
+
 const app = express();
 
 app.use(cors());
@@ -19,6 +21,16 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Database connection has been established successfully.");
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
+};
+
+startServer();

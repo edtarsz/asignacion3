@@ -1,20 +1,16 @@
-import prisma from "../config/prismaClient.js";
+import { Carrera } from "../models/index.js";
 import ApiError from "../utils/ApiError.js";
 
 export const createCarrera = async (carreraData) => {
-  return prisma.carrera.create({
-    data: carreraData,
-  });
+  return Carrera.create(carreraData);
 };
 
 export const getAllCarreras = async () => {
-  return prisma.carrera.findMany();
+  return Carrera.findAll();
 };
 
 export const getCarreraById = async (id) => {
-  const carrera = await prisma.carrera.findUnique({
-    where: { id: parseInt(id) },
-  });
+  const carrera = await Carrera.findByPk(id);
   if (!carrera) {
     throw new ApiError(404, "Carrera not found");
   }
@@ -22,18 +18,11 @@ export const getCarreraById = async (id) => {
 };
 
 export const updateCarrera = async (id, updateData) => {
-  await getCarreraById(id);
-
-  return prisma.carrera.update({
-    where: { id: parseInt(id) },
-    data: updateData,
-  });
+  const carrera = await getCarreraById(id);
+  return carrera.update(updateData);
 };
 
 export const deleteCarrera = async (id) => {
-  await getCarreraById(id);
-
-  return prisma.carrera.delete({
-    where: { id: parseInt(id) },
-  });
+  const carrera = await getCarreraById(id);
+  return carrera.destroy();
 };

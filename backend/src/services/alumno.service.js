@@ -1,26 +1,29 @@
-import prisma from "../config/prismaClient.js";
+import { Alumno, Carrera } from "../models/index.js";
 import ApiError from "../utils/ApiError.js";
 
 export const createAlumno = async (alumnoData) => {
-  return prisma.alumno.create({
-    data: alumnoData,
-  });
+  return Alumno.create(alumnoData);
 };
 
 export const getAllAlumnos = async () => {
-  return prisma.alumno.findMany({
-    include: {
-      carrera: true,
-    },
+  return Alumno.findAll({
+    include: [
+      {
+        model: Carrera,
+        as: "carrera",
+      },
+    ],
   });
 };
 
 export const getAlumnoById = async (id) => {
-  const alumno = await prisma.alumno.findUnique({
-    where: { id: parseInt(id) },
-    include: {
-      carrera: true,
-    },
+  const alumno = await Alumno.findByPk(id, {
+    include: [
+      {
+        model: Carrera,
+        as: "carrera",
+      },
+    ],
   });
 
   if (!alumno) {
@@ -30,18 +33,11 @@ export const getAlumnoById = async (id) => {
 };
 
 export const updateAlumno = async (id, updateData) => {
-  await getAlumnoById(id);
-
-  return prisma.alumno.update({
-    where: { id: parseInt(id) },
-    data: updateData,
-  });
+  const alumno = await getAlumnoById(id);
+  return alumno.update(updateData);
 };
 
 export const deleteAlumno = async (id) => {
-  await getAlumnoById(id);
-
-  return prisma.alumno.delete({
-    where: { id: parseInt(id) },
-  });
+  const alumno = await getAlumnoById(id);
+  return alumno.destroy();
 };
