@@ -9,7 +9,7 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
     depends_on:
-      - postgres
+      - mysql
     networks:
       - app-network
 
@@ -25,16 +25,17 @@ services:
     networks:
       - app-network
 
-  postgres:
-    image: postgres:17.6
-    container_name: postgres
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
     restart: always
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     ports:
       - "${DB_EXPOSE_PORT}:${DB_PORT}"
     networks:
@@ -45,4 +46,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  mysql_data:
