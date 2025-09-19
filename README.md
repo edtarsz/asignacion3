@@ -1,77 +1,48 @@
-# Asignación 3
+# Containerized Setup
 
-A full-stack student management system that allows CRUD operations for students and career assignments. Built with Node.js/Express backend, Angular frontend, PostgreSQL database, and Prisma ORM.
+Angular frontend, Node.js API, and PostgreSQL run together through `docker compose`. No local Node or Angular tooling is required unless you want to develop outside containers.
 
-## Quick Start
+## Prerequisites
+- Docker Engine 24+ with Compose Plugin 2.20+ (`docker version`, `docker compose version`).
 
-### Prerequisites
-- Docker & Docker Compose
-- Node.js (v18+)
-- npm
+## 1. Configure Environment
+1. Copy the template: `cp .env.example .env`.
+2. Tweak only if needed:
+   - `BACKEND_PORT`, `FRONTEND_PORT`, `DB_EXPOSE_PORT` map container ports to localhost.
+   - `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_SCHEMA` seed PostgreSQL on first run.
+   - `DATABASE_URL` must stay aligned with those values for Prisma.
 
-### 1. Environment Setup
-Copy the example environment file and configure your settings:
+## 2. Build and Launch
 ```bash
-cp .env.example .env
+docker compose up --build -d
 ```
+- `backend` builds from `backend/Dockerfile.dev`, generates the Prisma client, runs pending migrations, then starts with `npm run dev`.
+- `frontend` builds the Angular app for production and serves it via Nginx.
+- `postgres` (17.6) keeps its data in the `postgres_data` volume and exposes health status for the API to wait on.
 
-Edit the `.env` file with your preferred database credentials.
+When the stack is healthy:
+- API → `http://localhost:${BACKEND_PORT}` (default 3000)
+- UI → `http://localhost:${FRONTEND_PORT}` (default 4200)
+- PostgreSQL → `localhost:${DB_EXPOSE_PORT}` with the credentials from `.env`
 
-### 2. Database Setup
-Start the PostgreSQL database container and initialize the database schema with Prisma migrations:
-```bash
-# Start PostgreSQL container
-docker compose up -d
+## 3. Observe and Maintain
+- Combined logs: `docker compose logs -f`
+- Service-specific: `docker compose logs -f backend`
+- Status: `docker compose ps`
+- Prisma tasks from the running container:
+  - `docker compose exec backend npx prisma migrate dev`
+  - `docker compose exec backend npm run prisma:generate`
+  - `docker compose exec backend npm run prisma:studio`
 
-# Install backend dependencies and setup database schema
-cd backend
-npm install
-npm run prisma:migrate:dev
-```
+## 4. Lifecycle Commands
+- Stop containers (keep data): `docker compose down`
+- Remove containers + volume: `docker compose down -v` *(erases database)*
+- Force rebuilds after Dockerfile changes: `docker compose up --build -d`
 
-### 3. Backend Setup
-Install dependencies and start the Express.js development server:
-```bash
-cd backend
-npm install
-npm run dev  # Development server on port 3000
-```
+## 5. Optional Local Development
+1. Bring up only Postgres: `docker compose up postgres -d`.
+2. Run `npm install` once in `backend/` and `frontend/`.
+3. Ensure `.env` ports do not collide with locally running apps.
+4. Start services locally: `npm run dev` (backend) and `npm start` (frontend).
 
-### 4. Frontend Setup
-Install Angular dependencies and start the development server:
-```bash
-cd frontend
-npm install
-npm start    # Development server on port 4200
-```
-
-## Access the Application
-
-- **Frontend**: http://localhost:4200
-- **Backend**: http://localhost:3000
-
-## Additional Commands
-
-### Database Management
-Useful commands for managing your database and Prisma schema:
-```bash
-# View database in Prisma Studio
-cd backend
-npm run prisma:studio
-
-# Generate Prisma client after schema changes
-npm run prisma:generate
-
-# Deploy migrations to production
-npm run prisma:migrate:deploy
-```
-
-### Development
-Common development commands for managing Docker containers and resetting data:
-```bash
-# Stop all services
-docker compose down
-
-# Restart database with fresh data
-docker compose down -v && docker compose up -d
-```
+Keep only one instance (containers or local processes) on the same ports to avoid conflicts. Once `.env` is in place, `docker compose up --build -d` remains the quickest path to a full stack.
