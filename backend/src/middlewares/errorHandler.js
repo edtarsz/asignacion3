@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { BaseError, ValidationError, UniqueConstraintError } from 'sequelize';
 import ApiError from '../utils/ApiError.js';
 
 const errorHandler = (err, req, res, next) => {
@@ -8,24 +8,15 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof ApiError) {
     statusCode = err.statusCode;
     message = err.message;
-  } else if (err instanceof Prisma.PrismaClientValidationError) {
+  } else if (err instanceof ValidationError) {
     statusCode = 400; // Bad Request
+    message = err.errors.map(e => e.message).join(', ');
+  } else if (err instanceof UniqueConstraintError) {
+    statusCode = 409; // Conflict
+    message = err.errors.map(e => `${e.path} must be unique.`).join(', ');
+  } else if (err instanceof BaseError) { // Generic Sequelize error
+    statusCode = 400;
     message = err.message;
-  } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    switch (err.code) {
-      case 'P2002':
-        statusCode = 409;
-        message = `A record with this ${err.meta.target.join(', ')} already exists.`;
-        break;
-      case 'P2025':
-        statusCode = 404;
-        message = 'The requested record does not exist.';
-        break;
-      default:
-        statusCode = 400;
-        message = err.message;
-        break;
-    }
   } else {
     console.error(err);
   }
