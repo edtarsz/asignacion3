@@ -18,9 +18,6 @@ export class Eliminar {
   public carreraService = inject(CarreraService);
   public alumnoService = inject(AlumnoService);
 
-  public carreras: Signal<Carrera[]> = this.carreraService.carreras$;
-  public alumnos: Signal<Alumno[]> = this.alumnoService.alumnos$;
-
   constructor() {
     effect(() => {
       const entidadActual = this.interfaceService.entidad$();
