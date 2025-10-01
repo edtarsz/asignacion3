@@ -42,14 +42,12 @@ export class Asignar implements OnInit {
   onSubmit() {
     const { alumnoId, carreraId } = this.myForm.value;
 
-    this.alumnoService.obtenerAlumnoPorId(alumnoId).pipe(
-      switchMap(alumno => {
-        alumno.carreraId = +carreraId;
-        
-        // regresa el nuevo observable
-        return this.alumnoService.asignarAlumnoACarrera(alumno.id!, alumno.carreraId!);
-      })
-    ).subscribe({
+    if (!alumnoId || !carreraId) {
+      alert('Por favor, selecciona un alumno y una carrera.');
+      return;
+    }
+
+    this.alumnoService.asignarAlumnoACarrera(alumnoId, carreraId).subscribe({
       next: (alumnoActualizado) => {
         alert(`Carrera asignada y alumno ${alumnoActualizado.nombre} actualizado!`);
       },

@@ -37,7 +37,7 @@ export class Eliminar {
     }
   }
 
-  eliminar(id: number) {
+  eliminar(id: string) {
     if (this.interfaceService.entidad$() === 'Estudiante') {
       this.alumnoService.eliminarAlumno(id).subscribe({
         next: () => {

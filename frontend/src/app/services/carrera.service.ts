@@ -25,14 +25,14 @@ export class CarreraService {
     return this.httpClient.get<Carrera[]>(url).pipe(tap(res => this.carreras.set(res)));
   }
 
-  eliminarCarrera(id: number): Observable<void> {
+  eliminarCarrera(id: string): Observable<void> {
     const url = `${this.apiURL}/${id}`;
     return this.httpClient.delete<void>(url).pipe(
       tap(() => this.obtenerCarreras().subscribe())
     );
   }
 
-  actualizarCarrera(id: number, carreraEditada: Carrera): Observable<Carrera> {
+  actualizarCarrera(id: string, carreraEditada: Carrera): Observable<Carrera> {
     const url = `${this.apiURL}/${id}`;
     return this.httpClient.patch<Carrera>(url, carreraEditada).pipe(
       tap(() => this.obtenerCarreras().subscribe())

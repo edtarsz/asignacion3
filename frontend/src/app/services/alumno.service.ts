@@ -21,14 +21,14 @@ export class AlumnoService {
         );
     }
 
-    eliminarAlumno(id: number): Observable<void> {
+    eliminarAlumno(id: string): Observable<void> {
         const url = `${this.apiURL}/${id}`;
         return this.httpClient.delete<void>(url).pipe(
             tap(() => this.obtenerAlumnos().subscribe())
         );
     }
 
-    actualizarAlumno(id: number, alumnoEditado: Alumno): Observable<Alumno> {
+    actualizarAlumno(id: string, alumnoEditado: Alumno): Observable<Alumno> {
         const url = `${this.apiURL}/${id}`;
         return this.httpClient.patch<Alumno>(url, alumnoEditado).pipe(
             tap(() => this.obtenerAlumnos().subscribe())
@@ -40,16 +40,16 @@ export class AlumnoService {
         return this.httpClient.get<Alumno[]>(url).pipe(tap(res => this.alumnos.set(res)));
     }
 
-    obtenerAlumnoPorId(id: number): Observable<Alumno> {
+    obtenerAlumnoPorId(id: string): Observable<Alumno> {
         const url = `${this.apiURL}/${id}`;
         return this.httpClient.get<Alumno>(url).pipe();
     }
 
-    asignarAlumnoACarrera(alumnoId: number, carreraId: number): Observable<Alumno> {
+    asignarAlumnoACarrera(alumnoId: string, carreraId: string): Observable<Alumno> {
         const url = `${this.apiURL}/${alumnoId}`;
 
         // Se usan las llaves porque se tiene que especificar el nombre del campo a actualizar
-        return this.httpClient.patch<Alumno>(url, { carreraId }).pipe(
+        return this.httpClient.patch<Alumno>(url, { carrera: carreraId }).pipe(
             tap(() => this.obtenerAlumnos().subscribe())
         );
     }

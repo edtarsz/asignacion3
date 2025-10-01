@@ -15,8 +15,8 @@
             <option value="" class="bg-[var(--card-background-color)] text-white">
                 Selecciona una carrera (opcional)
             </option>
-            @for (carrera of carreraService.carreras$(); track carrera.id) {
-            <option [value]="carrera.id" class="bg-[var(--card-background-color)] text-white">
+            @for (carrera of carreraService.carreras$(); track carrera._id) {
+            <option [value]="carrera._id" class="bg-[var(--card-background-color)] text-white">
                 {{ carrera.nombre }}
             </option>
             }

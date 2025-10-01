@@ -84,19 +84,13 @@ export class Agregar {
   buildAlumno(): Alumno {
     const formValue = this.myForm.value;
 
-    // el + en el payload es para convertir string a number
     const payload = {
       nombre: formValue.nombreEstudiante || '',
       apellidos: formValue.apellidosEstudiante || '',
-      carreraId: formValue.carreraSeleccionada ? +formValue.carreraSeleccionada : null
+      carrera: formValue.carreraSeleccionada ? formValue.carreraSeleccionada : null
     }
 
-    // Nombres coincidan con el servidor express
-    return new Alumno(
-      payload.nombre,
-      payload.apellidos,
-      payload.carreraId
-    );
+    return payload as Alumno;
   }
 
   crearCarrera() {

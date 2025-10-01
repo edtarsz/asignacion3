@@ -1,6 +1,6 @@
 <div class="w-full flex flex-col gap-5">
     @if (interfaceService.entidad$() === 'Estudiante') {
-    @for (alumno of alumnoService.alumnos$(); track alumno.id) {
+    @for (alumno of alumnoService.alumnos$(); track alumno._id) {
     <div class="w-full flex flex-col gap-2">
         <p class="font-bold">{{ alumno.nombre }} {{ alumno.apellidos }}</p>
         <p class="text-sm">Carrera: {{ alumno.carrera ? alumno.carrera.nombre : 'No asignada' }}</p>
@@ -8,7 +8,7 @@
     </div>
     }
     } @else if (interfaceService.entidad$() === 'Carrera') {
-    @for (carrera of carreraService.carreras$(); track carrera.id) {
+    @for (carrera of carreraService.carreras$(); track carrera._id) {
     <div class="w-full flex flex-col gap-2">
         <p class="font-bold">{{ carrera.nombre }}</p>
         <hr>

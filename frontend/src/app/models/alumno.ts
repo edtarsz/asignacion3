@@ -1,7 +1,7 @@
 import { Carrera } from "./carrera";
 
 export class Alumno {
-    id?: number;
+    _id?: string;
     nombre: string;
     apellidos: string;
     carreraId?: number | null;

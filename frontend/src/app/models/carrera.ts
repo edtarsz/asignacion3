@@ -1,5 +1,5 @@
 export class Carrera {
-    id?: number
+    _id?: string;
     nombre: string;
 
     constructor(nombre: string) {

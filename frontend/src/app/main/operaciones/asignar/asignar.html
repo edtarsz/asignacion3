@@ -4,8 +4,8 @@
         <select id="select-estudiante" formControlName="alumnoId"
             class="w-full bg-[var(--input-background-color)] py-3 px-4 rounded-lg text-white border border-[rgba(255,255,255,0.3)] focus:outline-none appearance-none">
             <option value="" disabled>Elige un estudiante</option>
-            @for (alumno of alumnoService.alumnos$(); track alumno.id) {
-            <option [value]="alumno.id" class="bg-[var(--card-background-color)] text-white">
+            @for (alumno of alumnoService.alumnos$(); track alumno._id) {
+            <option [value]="alumno._id" class="bg-[var(--card-background-color)] text-white">
                 {{ alumno.nombre }} {{ alumno.apellidos }}
             </option>
             }
@@ -17,8 +17,8 @@
         <select id="select-carrera" formControlName="carreraId"
             class="w-full bg-[var(--input-background-color)] py-3 px-4 rounded-lg text-white border border-[rgba(255,255,255,0.3)] focus:outline-none appearance-none">
             <option value="" disabled>Elige una carrera</option>
-            @for (carrera of carreraService.carreras$(); track carrera.id) {
-            <option [value]="carrera.id" class="bg-[var(--card-background-color)] text-white">
+            @for (carrera of carreraService.carreras$(); track carrera._id) {
+            <option [value]="carrera._id" class="bg-[var(--card-background-color)] text-white">
                 {{ carrera.nombre }}
             </option>
             }

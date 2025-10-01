@@ -56,12 +56,12 @@ export class Actualizar {
         this.myForm.patchValue({ nombreEstudiante: '', apellidosEstudiante: '', carreraId: '' }, { emitEvent: false });
         return;
       }
-      const estudiante = this.alumnos().find(a => a.id === +idSeleccionado);
+      const estudiante = this.alumnos().find(a => a._id === idSeleccionado);
       if (estudiante) {
         this.myForm.patchValue({
           nombreEstudiante: estudiante.nombre,
           apellidosEstudiante: estudiante.apellidos,
-          carreraId: estudiante.carreraId || ''
+          carreraId: estudiante.carrera ? (typeof estudiante.carrera === 'string' ? estudiante.carrera : (estudiante.carrera as Carrera)._id) : ''
         }, { emitEvent: false });
       }
     });
@@ -81,7 +81,7 @@ export class Actualizar {
         this.myForm.patchValue({ nombreCarrera: '' }, { emitEvent: false });
         return;
       }
-      const carrera = this.carreras().find(c => c.id === +idSeleccionado);
+      const carrera = this.carreras().find(c => c._id === idSeleccionado);
       if (carrera) {
         this.myForm.patchValue({ nombreCarrera: carrera.nombre }, { emitEvent: false });
       }
@@ -97,13 +97,13 @@ export class Actualizar {
       return;
     }
 
-    const payload = {
+    const payload: Partial<Alumno> = {
       nombre: formValue.nombreEstudiante,
       apellidos: formValue.apellidosEstudiante,
-      carreraId: formValue.carreraId ? +formValue.carreraId : null
+      carrera: formValue.carreraId ? formValue.carreraId : null
     };
 
-    this.alumnoService.actualizarAlumno(formValue.estudianteId, payload).subscribe({
+    this.alumnoService.actualizarAlumno(formValue.estudianteId, payload as Alumno).subscribe({
       next: (res) => alert(`Estudiante '${res.nombre}' actualizado exitosamente.`),
       error: (err) => alert('Error al actualizar: ' + (err.error?.message || err.message)),
       complete: () => {
