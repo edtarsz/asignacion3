@@ -6,11 +6,11 @@ export const createCarrera = async (carreraData) => {
 };
 
 export const getAllCarreras = async () => {
-  return Carrera.findAll();
+  return Carrera.find();
 };
 
 export const getCarreraById = async (id) => {
-  const carrera = await Carrera.findByPk(id);
+  const carrera = await Carrera.findById(id);
   if (!carrera) {
     throw new ApiError(404, "Carrera not found");
   }
@@ -18,11 +18,17 @@ export const getCarreraById = async (id) => {
 };
 
 export const updateCarrera = async (id, updateData) => {
-  const carrera = await getCarreraById(id);
-  return carrera.update(updateData);
+  const carrera = await Carrera.findByIdAndUpdate(id, updateData, { new: true });
+  if (!carrera) {
+    throw new ApiError(404, "Carrera not found");
+  }
+  return carrera;
 };
 
 export const deleteCarrera = async (id) => {
-  const carrera = await getCarreraById(id);
-  return carrera.destroy();
+  const carrera = await Carrera.findByIdAndDelete(id);
+  if (!carrera) {
+    throw new ApiError(404, "Carrera not found");
+  }
+  return carrera;
 };

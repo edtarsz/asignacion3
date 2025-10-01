@@ -1,28 +1,13 @@
-import { DataTypes, Model } from 'sequelize';
+import mongoose from 'mongoose';
 
-export default (sequelize) => {
-  class Carrera extends Model {}
+const carreraSchema = new mongoose.Schema({
+  nombre: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+});
 
-  Carrera.init(
-    {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      nombre: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-    },
-    {
-      sequelize,
-      modelName: 'Carrera',
-      tableName: 'carreras',
-      timestamps: false,
-    }
-  );
+const Carrera = mongoose.model('Carrera', carreraSchema);
 
-  return Carrera;
-};
+export default Carrera;

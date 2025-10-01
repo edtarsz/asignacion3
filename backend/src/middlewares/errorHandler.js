@@ -1,4 +1,4 @@
-import { BaseError, ValidationError, UniqueConstraintError } from 'sequelize';
+import mongoose from 'mongoose';
 import ApiError from '../utils/ApiError.js';
 
 const errorHandler = (err, req, res, next) => {
@@ -8,15 +8,13 @@ const errorHandler = (err, req, res, next) => {
   if (err instanceof ApiError) {
     statusCode = err.statusCode;
     message = err.message;
-  } else if (err instanceof ValidationError) {
+  } else if (err instanceof mongoose.Error.ValidationError) {
     statusCode = 400; // Bad Request
-    message = err.errors.map(e => e.message).join(', ');
-  } else if (err instanceof UniqueConstraintError) {
+    message = Object.values(err.errors).map(e => e.message).join(', ');
+  } else if (err.code === 11000) {
     statusCode = 409; // Conflict
-    message = err.errors.map(e => `${e.path} must be unique.`).join(', ');
-  } else if (err instanceof BaseError) { // Generic Sequelize error
-    statusCode = 400;
-    message = err.message;
+    const field = Object.keys(err.keyValue)[0];
+    message = `${field.charAt(0).toUpperCase() + field.slice(1)} must be unique.`;
   } else {
     console.error(err);
   }

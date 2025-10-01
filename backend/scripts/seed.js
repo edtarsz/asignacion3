@@ -1,26 +1,36 @@
-import { sequelize, Alumno, Carrera } from '../src/models/index.js';
+import mongoose from 'mongoose';
+import { Alumno, Carrera } from '../src/models/index.js';
 
 const seedDatabase = async () => {
   try {
-    await sequelize.sync({ force: true });
-    console.log('Database synchronized.');
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Database connected for seeding.');
 
-    const [carrera1, carrera2] = await Carrera.bulkCreate([
+    await Carrera.deleteMany({});
+    await Alumno.deleteMany({});
+    console.log('Old data cleared.');
+
+    const carreras = await Carrera.insertMany([
       { nombre: 'Ingeniería de Sistemas' },
       { nombre: 'Psicología' },
-    ], { returning: true });
+    ]);
 
-    await Alumno.bulkCreate([
-      { nombre: 'Juan', apellidos: 'Perez', carreraId: carrera1.id },
-      { nombre: 'Ana', apellidos: 'Gomez', carreraId: carrera2.id },
+    const carrera1 = carreras[0];
+    const carrera2 = carreras[1];
+
+    await Alumno.insertMany([
+      { nombre: 'Juan', apellidos: 'Perez', carrera: carrera1._id },
+      { nombre: 'Ana', apellidos: 'Gomez', carrera: carrera2._id },
       { nombre: 'Luis', apellidos: 'Martinez' },
     ]);
 
     console.log('Database seeded successfully.');
-    process.exit(0);
   } catch (error) {
     console.error('Error seeding the database:', error);
-    process.exit(1);
+  } finally {
+    await mongoose.connection.close();
+    console.log('Database connection closed.');
+    process.exit(0);
   }
 };
 

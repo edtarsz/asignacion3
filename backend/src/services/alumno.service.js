@@ -1,4 +1,4 @@
-import { Alumno, Carrera } from "../models/index.js";
+import { Alumno } from "../models/index.js";
 import ApiError from "../utils/ApiError.js";
 
 export const createAlumno = async (alumnoData) => {
@@ -6,25 +6,11 @@ export const createAlumno = async (alumnoData) => {
 };
 
 export const getAllAlumnos = async () => {
-  return Alumno.findAll({
-    include: [
-      {
-        model: Carrera,
-        as: "carrera",
-      },
-    ],
-  });
+  return Alumno.find().populate("carrera");
 };
 
 export const getAlumnoById = async (id) => {
-  const alumno = await Alumno.findByPk(id, {
-    include: [
-      {
-        model: Carrera,
-        as: "carrera",
-      },
-    ],
-  });
+  const alumno = await Alumno.findById(id).populate("carrera");
 
   if (!alumno) {
     throw new ApiError(404, "Alumno not found");
@@ -33,11 +19,17 @@ export const getAlumnoById = async (id) => {
 };
 
 export const updateAlumno = async (id, updateData) => {
-  const alumno = await getAlumnoById(id);
-  return alumno.update(updateData);
+  const alumno = await Alumno.findByIdAndUpdate(id, updateData, { new: true });
+  if (!alumno) {
+    throw new ApiError(404, "Alumno not found");
+  }
+  return alumno;
 };
 
 export const deleteAlumno = async (id) => {
-  const alumno = await getAlumnoById(id);
-  return alumno.destroy();
+  const alumno = await Alumno.findByIdAndDelete(id);
+  if (!alumno) {
+    throw new ApiError(404, "Alumno not found");
+  }
+  return alumno;
 };
